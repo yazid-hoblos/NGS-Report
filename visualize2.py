@@ -124,51 +124,6 @@ plt.ylabel("Individuals")
 plt.show()
 # plt.savefig("plots/marker2.png")
 
-# # # Select allele 2 columns for all markers
-# haplotype_data = data[[f"Marker{i}_A1" for i in range(1, 14)]].values
-
-# # Convert to DataFrame to adjust index
-# haplotype_df = pd.DataFrame(haplotype_data, columns=[f"Marker{i}_A1" for i in range(1, 14)])
-
-# haplotype_df.index = data['Individual']
-# haplotype_df = haplotype_df.sort_index()
-# # Plot the heatmap
-# plt.figure(figsize=(12, 8))
-# sns.heatmap(haplotype_df, cmap="viridis")
-# plt.title("Haplotype Heatmap")
-# plt.xlabel("Markers")
-# plt.ylabel("Individuals")
-# plt.savefig("plots/marker1.png")
-
-
-# # import seaborn as sns
-# # import pandas as pd
-# # import matplotlib.pyplot as plt
-
-# # # Select allele 2 columns for all markers
-# # haplotype_data = data[[f"Marker{i}_A2" for i in range(1, 14)]].values
-
-# # # Convert to DataFrame to adjust index
-# # haplotype_df = pd.DataFrame(haplotype_data, columns=[f"Marker{i}_A2" for i in range(1, 14)])
-
-# # # Add Disease Status to the DataFrame for row annotations
-# # haplotype_df['Disease_Status'] = data['Disease_Status']
-
-# # # Create a color map for disease status (can adjust colors if needed)
-# # disease_colors = haplotype_df['Disease_Status'].map({1: 'blue', 2: 'red', 0: 'gray'})
-
-# # haplotype_df.index = range(1, len(haplotype_df) + 1)
-
-# # # Plot the clustermap with disease status as row colors
-# # sns.clustermap(haplotype_df.drop(columns='Disease_Status'), 
-# #                cmap="viridis", 
-# #                row_colors=disease_colors,  # Highlight disease status with color
-# #                cbar_kws={'label': 'Allele Value'}, 
-# #                figsize=(12, 8))
-
-# # plt.title("Haplotype Clustermap with Disease Status Highlighting", fontsize=16)
-# # plt.show()
-
 
 # import seaborn as sns
 # import pandas as pd

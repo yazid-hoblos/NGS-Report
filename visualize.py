@@ -12,6 +12,8 @@ data = pd.read_csv("TP_DATA_PROG/TP_DATA_PROG/I.a.Paramlink/fam.txt", sep='\s+',
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+## Disease stutus distribution
+
 # sns.countplot(x="Disease_Status", data=data)
 # plt.title("Distribution of Disease Status")
 # plt.show()
@@ -21,13 +23,16 @@ plt.title("Disease Status and Gender Distribution")
 plt.legend(["Male", "Female"])
 plt.savefig("disease.png")    
 
-'''
+## Allele frequencies for each marker
+
 # for i in range(1, 14):
 #     marker_cols = [f"Marker{i}_A1", f"Marker{i}_A2"]
 #     marker_data = data[marker_cols].melt(value_vars=marker_cols)
 #     sns.countplot(x="value", data=marker_data)
 #     plt.title(f"Allele Frequencies for Marker {i}")
 #     plt.show()
+
+## Allele frequencies for each marker in subplots
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -63,6 +68,8 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+## Combine data for all markers into one DataFrame
+
 # Combine data for all markers into one DataFrame
 all_markers = []
 for i in range(1, 14):
@@ -86,9 +93,7 @@ plt.tight_layout()
 plt.savefig("grouped_barplot.png")
 
 
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
+## Boxplot for all markers
 
 # Select all marker columns
 marker_columns = [col for col in data.columns if col.startswith("Marker")]
@@ -108,6 +113,8 @@ plt.legend(title="Disease Status", bbox_to_anchor=(1.05, 1), loc="upper left")
 plt.tight_layout()
 plt.savefig("boxplot.png")
 
+
+## Haplotype Heatmap
 
 haplotype_data = data[[f"Marker{i}_A2" for i in range(1, 14)]].values
 haplotype_df = pd.DataFrame(haplotype_data, columns=[f"Marker{i}_A2" for i in range(1, 14)])
@@ -168,9 +175,7 @@ plt.savefig("plots/marker1.png")
 # plt.show()
 
 
-import seaborn as sns
-import pandas as pd
-import matplotlib.pyplot as plt
+## Haplotype Clustermap
 
 # Select allele 2 columns for all markers
 haplotype_data = data[[f"Marker{i}_A1" for i in range(1, 14)]].values
@@ -220,4 +225,3 @@ g=sns.clustermap(haplotype_df.drop(columns='Disease_Status'),
 g.cax.set_position([0.02, 0.05, 0.05, 0.1])
 
 plt.savefig("clustermap2.png")
-'''
