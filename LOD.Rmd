@@ -1,0 +1,203 @@
+---
+title: "NGS-partII"
+author: "Yazid Hoblos"
+date: "2025-01-15"
+output: html_document
+---
+
+```{r}
+library(paramlink)
+fam=read.table("TP_DATA_PROG/TP_DATA_PROG/I.a.Paramlink/fam.txt")
+fam2=read.table("TP_DATA_PROG/TP_DATA_PROG/I.b.Fbat/fam")
+fam[1:5,1:10]
+```
+
+
+
+```{r}
+transform=linkdat(fam)
+```
+
+```{r}
+fam
+```
+
+```{r}
+transform
+```
+
+
+```{r}
+summary(transform)
+```
+
+
+```{r}
+transform
+```
+
+
+```{r}
+png("pedigree.png")
+plot(transform,marker=1)
+dev.off()
+```
+
+```{r}
+?linkdat
+?setModel
+summary(transform)
+xdom=setModel(transform, model=1, penetrances=c(0.00001,1, 1), dfreq=0.00001) 
+xdom$model
+xdom$markerdata[[5]]
+?lod
+lod_scores=lod(xdom, theta=c(0,0.05, 0.075, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5))
+lod_scores
+#write to csv
+write.csv(lod_scores, file = "lod_scores.csv")
+lod_scores[,1]
+length(lod_scores[1,])
+```
+
+```{r}
+xdom5$markerdata[[5]]
+```
+
+
+```{r}
+theta = c(0,0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5)
+
+for (i in 1:length(lod_scores[1,])) {
+  
+lod_m1 = lod_scores[,i]
+
+# Find the maximum LOD score and the confidence interval
+max_lod <- max(lod_m1)
+conf_interval <- theta[lod_m1 >= (max_lod - 1)]
+
+plot(theta, lod_m1, type = "l", col = "blue", lwd = 2,
+     xlab = "Recombination Fraction (theta)", ylab = "LOD Score",
+     main = "LOD-Score Curve")
+abline(h = max_lod, col = "red", lty = 2) # Maximum LOD score line
+abline(h = max_lod - 1, col = "green", lty = 2) # Confidence interval threshold
+legend("topright", legend = c("LOD Score", "Max LOD", "LOD-1 Threshold"),
+       col = c("blue", "red", "green"), lty = c(1, 2, 2), lwd = c(2, 1, 1))
+
+print(i)
+cat("Maximum LOD score:", max_lod, "\n")
+cat("theta for maximum LOD score:", theta[lod_m1 == max_lod], "\n")
+cat("Confidence interval for theta:", range(conf_interval), "\n")
+}
+```
+
+
+```{r}
+# Assuming lod_scores is your matrix and theta is defined as:
+theta = c(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5)
+
+# Loop through each column of lod_scores and generate individual plots
+for (i in 1:ncol(lod_scores)) {
+  
+  lod_m1 = lod_scores[,i]
+  
+  # Find the maximum LOD score and the confidence interval
+  max_lod <- max(lod_m1)
+  conf_interval <- theta[lod_m1 >= (max_lod - 1)]
+  
+  # Open a PNG device to save each plot separately
+  png(paste("lod_plot2_", i, ".png", sep=""), width = 800, height = 600)
+  
+  # Create a plot for each LOD curve
+  plot(theta, lod_m1, type = "l", col = "blue", lwd = 2,
+       xlab = "Recombination Fraction (theta)", ylab = "LOD Score",
+       main = paste("LOD-Score Curve for M", i, sep=""))
+  
+  abline(h = max_lod, col = "red", lty = 2) # Maximum LOD score line
+  abline(h = max_lod - 1, col = "green", lty = 2) # Confidence interval threshold
+  legend("topright", legend = c("LOD Score", "Max LOD", "Zmax-1 Threshold"),
+         col = c("blue", "red", "green"), lty = c(1, 2, 2), lwd = c(2, 1, 1))
+  
+  # Print the maximum LOD score and the corresponding theta value
+  cat("Column", i, "- Maximum LOD score:", max_lod, "\n")
+  cat("Theta for maximum LOD score:", theta[lod_m1 == max_lod], "\n")
+  cat("Confidence interval for theta:", range(conf_interval), "\n")
+  
+  # Close the current PNG device
+  dev.off()
+}
+
+```
+
+```{r}
+fam
+transform
+xdom
+?linkdat
+lod(xdom, marker=c(5,7,8,12), theta='max') 
+```
+
+```{r}
+?modifyMarker
+xdom5=modifyMarker(xdom,marker = 5, afreq = c(0.1, 0.1, 0.1, 0.7))
+xdom5
+```
+
+```{r}
+lod_scores[,5]
+x=modifyMarker(xdom,marker = 5, afreq = c(0.25, 0.25, 0.25, 0.25))
+lod(xdom5, marker=5, theta=c(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5))
+```
+
+```{r}
+lod(x, marker=5, theta=c(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5))
+```
+
+
+```{r}
+xdom5=modifyMarker(xdom,marker = 5, afreq = c(0.1, 0.1, 0.1, 0.7))
+res=lod(xdom5, marker=5, theta=c(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5))
+#save the results
+write.csv(res, file = "lod_scores_marker5.csv")
+```
+
+```{r}
+xrec=setModel(transform, model=2, penetrances=c(0.00001,0.00001, 1), dfreq=0.00001)
+res=lod(xrec, theta=c(0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5))
+#save the results
+write.csv(res, file = "lod_scores_recessive.csv")
+res
+```
+
+```{r}
+lod_scores=res
+theta = c(0,0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5)
+
+for (i in 1:length(lod_scores[1,])) {
+  
+lod_m1 = lod_scores[,i]
+
+# Find the maximum LOD score and the confidence interval
+max_lod <- max(lod_m1)
+conf_interval <- theta[lod_m1 >= (max_lod - 1)]
+
+plot(theta, lod_m1, type = "l", col = "blue", lwd = 2,
+     xlab = "Recombination Fraction (theta)", ylab = "LOD Score",
+     main = "LOD-Score Curve")
+abline(h = max_lod, col = "red", lty = 2) # Maximum LOD score line
+abline(h = max_lod - 1, col = "green", lty = 2) # Confidence interval threshold
+legend("topright", legend = c("LOD Score", "Max LOD", "LOD-1 Threshold"),
+       col = c("blue", "red", "green"), lty = c(1, 2, 2), lwd = c(2, 1, 1))
+
+print(i)
+cat("Maximum LOD score:", max_lod, "\n")
+cat("theta for maximum LOD score:", theta[lod_m1 == max_lod], "\n")
+cat("Confidence interval for theta:", range(conf_interval), "\n")
+}
+```
+
+
+
+
+
+
+
